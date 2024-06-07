@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listar Fabricantes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1><i class="fas fa-list" style="margin-right: 10px;"></i> Listar Fabricantes</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome Fantasia</th>
+                <th>Razão Social</th>
+                <th>CNPJ</th>
+                <th>Endereço</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>Vendedor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fabricante in fabricantes %}
+            <tr>
+                <td>{{ fabricante.nome_fantasia }}</td>
+                <td>{{ fabricante.razao_social }}</td>
+                <td>{{ fabricante.cnpj }}</td>
+                <td>{{ fabricante.endereco }}</td>
+                <td>{{ fabricante.telefone }}</td>
+                <td>{{ fabricante.email }}</td>
+                <td>{{ fabricante.vendedor }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
