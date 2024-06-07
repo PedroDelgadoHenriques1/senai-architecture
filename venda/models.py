@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.db import models
+
 
 class FuncionarioManager(BaseUserManager):
     def create_user(self, login, nome, email, password=None):
@@ -51,3 +53,38 @@ class Funcionario(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+    
+
+class Fabricante(models.Model):
+    nome = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nome
+
+class Grupo(models.Model):
+    nome = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nome
+
+class Subgrupo(models.Model):
+    nome = models.CharField(max_length=100)
+    grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nome
+
+class Produto(models.Model):
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField()
+    preco_custo = models.DecimalField(max_digits=10, decimal_places=2)
+    preco_vendas = models.DecimalField(max_digits=10, decimal_places=2)
+    peso = models.DecimalField(max_digits=10, decimal_places=3)
+    quantidade_comprado = models.PositiveIntegerField()
+    quantidade_vendida = models.PositiveIntegerField()
+    fabricante = models.ForeignKey(Fabricante, on_delete=models.CASCADE)
+    grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
+    subgrupo = models.ForeignKey(Subgrupo, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nome
