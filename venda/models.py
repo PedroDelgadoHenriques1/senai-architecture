@@ -69,13 +69,16 @@ class Fabricante(models.Model):
 
 class Grupo(models.Model):
     nome = models.CharField(max_length=100)
+    descricao = models.TextField(default='Descrição padrão')  # Adicionando um valor padrão
 
     def __str__(self):
         return self.nome
 
 class Subgrupo(models.Model):
-    nome = models.CharField(max_length=100)
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField(default='Descrição padrão')  # Adicionando um valor padrão
+    
 
     def __str__(self):
         return self.nome
@@ -94,3 +97,4 @@ class Produto(models.Model):
 
     def __str__(self):
         return self.nome
+    
