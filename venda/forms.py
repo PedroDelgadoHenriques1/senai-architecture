@@ -25,5 +25,5 @@ class SubgrupoForm(forms.ModelForm):
         fields = ['grupo', 'nome', 'descricao']
 
 class LancamentoVendasForm(forms.Form):
-    produto = forms.ModelChoiceField(queryset=Produto.objects.all())
-    quantidade = forms.IntegerField(min_value=1)
+    produto = forms.ModelChoiceField(queryset=Produto.objects.all(), label='Produto')
+    quantidade_vendida = forms.IntegerField(label='Quantidade Vendida')

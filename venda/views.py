@@ -1,3 +1,4 @@
+import pandas as pd
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -5,6 +6,7 @@ from .models import Produto, Fabricante, Grupo, Subgrupo, Venda
 from .forms import ProdutoForm, FabricanteForm, GrupoForm, SubgrupoForm, LancamentoVendasForm
 import plotly.express as px
 import plotly.graph_objs as go
+from django.shortcuts import get_object_or_404
 
 def login_view(request):
     if request.method == 'POST':
@@ -78,47 +80,50 @@ def lancamento_vendas_view(request):
     if request.method == 'POST':
         form = LancamentoVendasForm(request.POST)
         if form.is_valid():
-            produto = form.cleaned_data['produto']
-            quantidade = form.cleaned_data['quantidade']
-            if produto.quantidade >= quantidade:
-                valor_venda = produto.preco_venda * quantidade
-                venda = Venda(produto=produto, quantidade=quantidade, valor_venda=valor_venda)
-                venda.save()
-                produto.quantidade -= quantidade
+            produto_id = form.cleaned_data['produto']
+            quantidade_vendida = form.cleaned_data['quantidade_vendida']
+            
+            # Recupera o produto do banco de dados
+            produto = Produto.objects.get(pk=produto_id)
+            
+            # Verifica se há estoque suficiente
+            if quantidade_vendida <= produto.quantidade:
+                # Calcula o valor total da venda
+                valor_venda_total = produto.preco_venda * quantidade_vendida
+                
+                # Atualiza a quantidade vendida e subtrai do estoque
+                produto.quantidade -= quantidade_vendida
                 produto.save()
-                return render(request, 'venda/sucesso.html', {'produto': produto, 'quantidade': quantidade})
+                
+                # Implemente aqui a lógica de registro da venda, se necessário
+                
+                return redirect('venda:lancamento_vendas')
             else:
-                messages.error(request, 'Quantidade insuficiente em estoque')
+                # Retorne uma mensagem de erro caso não haja estoque suficiente
+                return render(request, 'venda/lancamento_vendas.html', {'form': form, 'erro': 'Estoque insuficiente.'})
     else:
         form = LancamentoVendasForm()
     
     return render(request, 'venda/lancamento_vendas.html', {'form': form})
 
+
 def visualizar_vendas_view(request):
-    vendas = Venda.objects.all()
-    produtos = Produto.objects.all()
-
-    fig_linha = px.line(vendas, x='data_hora', y=['valor_venda'], title='Valor Venda Total Mensal')
-    fig_barras = px.bar(produtos, x='id', y=['quantidade'], title='Quantidade Vendida Total Mensal')
-    fig_dispersao = px.scatter(vendas, x='data_hora', y='valor_venda', title='Percentual de Lucro Mensal')
-
-    top_produtos = produtos.order_by('-quantidade')[:3]
-    fig_pizza = px.pie(top_produtos, names='nome', values='quantidade', title='Top 3 Produtos Mais Vendidos')
-
-    grupos = produtos.values('grupo').annotate(total_vendido=models.Sum('quantidade')).filter(total_vendido__gte=1000)
-    fig_barras_linha = go.Figure()
-    fig_barras_linha.add_trace(go.Bar(x=[grupo['grupo'] for grupo in grupos], y=[grupo['total_vendido'] for grupo in grupos], name='Quantidade Vendida'))
-
-    produtos_estoque_baixo = produtos.filter(quantidade__lt=10).order_by('-quantidade')
-
-    return render(request, 'venda/visualizar_vendas.html', {
-        'fig_linha': fig_linha.to_html(),
-        'fig_barras': fig_barras.to_html(),
-        'fig_dispersao': fig_dispersao.to_html(),
-        'fig_pizza': fig_pizza.to_html(),
-        'fig_barras_linha': fig_barras_linha.to_html(),
-        'produtos_estoque_baixo': produtos_estoque_baixo,
-    })
+    # Lógica para obter os dados para o gráfico de barras
+    # Exemplo de dados fictícios
+    dados = {
+        'data_hora': ['2024-01-01', '2024-02-01', '2024-03-01'],
+        'quantidade_comprada_total': [500, 600, 700],
+        'quantidade_vendida_total': [400, 550, 600]
+    }
+    
+    vendas = pd.DataFrame(dados)
+    
+    fig_barras = px.bar(vendas, x='data_hora', y=['quantidade_comprada_total', 'quantidade_vendida_total'], 
+                        title='Quantidade Comprada e Vendida Total Mensal')
+    
+    graph_barras = fig_barras.to_html(full_html=False, default_height=500, default_width=700)
+    
+    return render(request, 'venda/visualizar_vendas.html', {'graph_barras': graph_barras})
 
 def sucesso_view(request):
     return render(request, 'venda/sucesso.html')

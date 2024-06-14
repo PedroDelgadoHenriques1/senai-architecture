@@ -100,9 +100,9 @@ class Produto(models.Model):
     
 class Venda(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
-    data_hora = models.DateTimeField(auto_now_add=True)
+    quantidade = models.PositiveIntegerField()
     valor_venda = models.DecimalField(max_digits=10, decimal_places=2)
-    quantidade = models.IntegerField()
+    data_hora = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.nome
+        return f"{self.produto.nome} - {self.quantidade} - {self.valor_venda}"
