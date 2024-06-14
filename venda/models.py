@@ -98,3 +98,11 @@ class Produto(models.Model):
     def __str__(self):
         return self.nome
     
+class Venda(models.Model):
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    data_hora = models.DateTimeField(auto_now_add=True)
+    valor_venda = models.DecimalField(max_digits=10, decimal_places=2)
+    quantidade = models.IntegerField()
+
+    def __str__(self):
+        return self.nome

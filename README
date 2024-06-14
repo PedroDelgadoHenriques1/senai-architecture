@@ -1,2 +1,4 @@
 admin: pedro 123
 
+pip install pandas
+pip install plotly

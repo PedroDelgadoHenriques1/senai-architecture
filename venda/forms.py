@@ -1,5 +1,5 @@
 from django import forms
-from .models import Produto, Fabricante, Grupo, Subgrupo
+from .models import Produto, Fabricante, Grupo, Subgrupo, Venda
 
 class ProdutoForm(forms.ModelForm):
     class Meta:
@@ -23,3 +23,7 @@ class SubgrupoForm(forms.ModelForm):
     class Meta:
         model = Subgrupo
         fields = ['grupo', 'nome', 'descricao']
+
+class LancamentoVendasForm(forms.Form):
+    produto = forms.ModelChoiceField(queryset=Produto.objects.all())
+    quantidade = forms.IntegerField(min_value=1)
