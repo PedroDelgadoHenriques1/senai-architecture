@@ -80,11 +80,14 @@ def lancamento_vendas_view(request):
     if request.method == 'POST':
         form = LancamentoVendasForm(request.POST)
         if form.is_valid():
-            produto_id = form.cleaned_data['produto']
+            produto_id = form.cleaned_data['produto'].id  # Obtenha o ID do produto
             quantidade_vendida = form.cleaned_data['quantidade_vendida']
             
-            # Recupera o produto do banco de dados
-            produto = Produto.objects.get(pk=produto_id)
+            try:
+                produto = Produto.objects.get(pk=produto_id)
+            except Produto.DoesNotExist:
+                # Lógica de tratamento se o produto não existir
+                return render(request, 'venda/lancamento_vendas.html', {'form': form, 'erro': 'Produto não encontrado.'})
             
             # Verifica se há estoque suficiente
             if quantidade_vendida <= produto.quantidade:
@@ -105,7 +108,6 @@ def lancamento_vendas_view(request):
         form = LancamentoVendasForm()
     
     return render(request, 'venda/lancamento_vendas.html', {'form': form})
-
 
 def visualizar_vendas_view(request):
     # Lógica para obter os dados para o gráfico de barras

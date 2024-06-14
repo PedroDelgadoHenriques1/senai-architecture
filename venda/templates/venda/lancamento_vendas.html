@@ -34,6 +34,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            width: 100%; /* Para ocupar toda a largura do container */
         }
         form button {
             padding: 10px;
@@ -42,6 +43,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            width: 100%; /* Para ocupar toda a largura do container */
         }
         form button:hover {
             background-color: #45a049;
@@ -51,7 +53,7 @@
 <body>
     <div class="container">
         <h1>Lançamento de Vendas</h1>
-        <form method="post">
+        <form method="post" action="{% url 'lancamento_vendas' %}">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Registrar Venda</button>

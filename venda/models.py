@@ -94,6 +94,7 @@ class Produto(models.Model):
     fabricante = models.ForeignKey(Fabricante, on_delete=models.CASCADE)
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
     subgrupo = models.ForeignKey(Subgrupo, on_delete=models.CASCADE)
+    quantidade = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nome
@@ -105,4 +106,4 @@ class Venda(models.Model):
     data_hora = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.produto.nome} - {self.quantidade} - {self.valor_venda}"
+        return f'{self.produto} - {self.quantidade}'
