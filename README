@@ -1,4 +1,29 @@
-admin: pedro 123
+Criador: Pedro Delgado Henriques
 
+Apresentação do Projeto: Sistema de Vendas de Produtos Naturais
+Contexto e Objetivos do Projeto:
+O projeto consiste na criação de um sistema de vendas online para produtos naturais, utilizando a arquitetura de software com o framework Django em Python. O objetivo principal é proporcionar uma plataforma eficiente e intuitiva tanto para funcionários, que lançam vendas e gerenciam estoques, quanto para administradores, que realizam cadastros e monitoram o desempenho de vendas.
+
+Casos de Uso Principais:
+Autenticação: Funcionários acessam o sistema com autenticação segura.
+Cadastro de Produto: Administradores adicionam novos produtos ao catálogo.
+Cadastro de Fabricante: Informações sobre fabricantes são gerenciadas e associadas aos produtos.
+Cadastro de Grupo e Subgrupo: Produtos são organizados em categorias e subcategorias para facilitar a navegação.
+Lançamento de Vendas: Funcionários registram vendas, calculam valores e atualizam estoques.
+Visualizar Vendas: Funcionários visualizam o desempenho de vendas através de gráficos e tabelas analíticas.
+Arquitetura e Tecnologias Utilizadas:
+Arquitetura em Camadas (MVC): Separação clara de responsabilidades entre modelos, visões e controladores.
+Django Framework: Utilização de um framework robusto para desenvolvimento rápido e seguro.
+Banco de Dados SQLite: Banco de dados embutido para simplicidade de configuração.
+Plotly Express e Plotly Graph Objects: Bibliotecas para criação de gráficos interativos na interface do sistema.
+Design Patterns Aplicados:
+Factory Method e Singleton: Para criação de objetos relacionados e garantia de instância única, respectivamente.
+Observer: Para notificação automática de mudanças de estado aos dependentes, como atualizações de estoque e vendas.
+Resultados Esperados:
+Espera-se que o sistema proporcione uma experiência eficiente e agradável para os usuários finais, facilitando tanto o gerenciamento interno quanto a interação com clientes. Os gráficos e tabelas analíticas disponibilizados na interface do sistema permitirão uma tomada de decisão embasada e ágil por parte dos funcionários e administradores.
+
+
+
+REQUISITOS DE INSTALAÇÃO CASO DER ERRO:
 pip install pandas
 pip install plotly
