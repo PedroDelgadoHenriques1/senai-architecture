@@ -1,28 +1,215 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visualizar Vendas</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .chart-container {
-            width: 100%;
-            height: 400px;
-        }
-    </style>
+    <!-- Incluindo o Plotly.js para gráficos interativos -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <h1>Visualizar Vendas</h1>
-    {% if error %}
-        <p>{{ error }}</p>
-    {% else %}
-        <div class="chart-container">
-            {{ fig_linha|safe }}
+    <h1>Visualização de Vendas</h1>
+
+    <div class="graficos-container">
+        <div class="grafico">
+            <h2>Gráfico de Linha: Custo Total e Venda Total Mensal</h2>
+            <div id="grafico-linha"></div>
         </div>
-    {% endif %}
+
+        <div class="grafico">
+            <h2>Gráfico de Barras: Quantidade Comprado e Vendido Mensal</h2>
+            <div id="grafico-barras"></div>
+        </div>
+
+        <div class="grafico">
+            <h2>Gráfico de Dispersão: Percentual de Lucro Mensal</h2>
+            <div id="grafico-dispersao"></div>
+        </div>
+
+        <div class="grafico">
+            <h2>Gráfico de Pizza: Produtos Mais Vendidos</h2>
+            <div id="grafico-pizza"></div>
+        </div>
+
+        <div class="grafico">
+            <h2>Gráfico de Barras e Linha: Grupos com Vendas >= 1000 Unidades</h2>
+            <div id="grafico-barras-linha"></div>
+        </div>
+
+        <div class="tabela">
+            <h2>Tabela Analítica: Produtos com Estoque Baixo</h2>
+            <table id="tabela-analitica">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Quantidade em Estoque</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Linhas da tabela serão populadas dinamicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Código JavaScript/Plotly.js para gerar os gráficos
+
+        // Exemplo de dados fictícios para os gráficos
+        const dados = {
+            meses: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            custoTotal: [5000, 6000, 5500, 7000, 6500, 7200, 6800, 6900, 7500, 7800, 8200, 8000],
+            vendaTotal: [8000, 9000, 8500, 10000, 9500, 10200, 9800, 10000, 10500, 10800, 11200, 11000],
+            quantidadeComprado: [200, 220, 210, 230, 240, 250, 260, 270, 280, 290, 300, 310],
+            quantidadeVendido: [180, 200, 190, 210, 220, 230, 240, 250, 260, 270, 280, 290],
+            lucroPercentual: [10, 8, 9, 8.5, 9.5, 9, 8.7, 9.2, 9.5, 9.8, 10, 9.9],
+            produtosMaisVendidos: ['Produto A', 'Produto B', 'Produto C'],
+            vendasGrupos: [
+                { grupo: 'Grupo X', vendas: 1200 },
+                { grupo: 'Grupo Y', vendas: 1100 },
+                { grupo: 'Grupo Z', vendas: 1050 },
+                { grupo: 'Grupo W', vendas: 1000 }
+            ],
+            estoqueBaixo: [
+                { produto: 'Produto D', quantidade: 50 },
+                { produto: 'Produto E', quantidade: 60 },
+                { produto: 'Produto F', quantidade: 70 }
+            ]
+        };
+
+        // Funções para criar os gráficos usando Plotly.js
+        function criarGraficoLinha() {
+            const trace1 = {
+                x: dados.meses,
+                y: dados.custoTotal,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Custo Total'
+            };
+
+            const trace2 = {
+                x: dados.meses,
+                y: dados.vendaTotal,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Venda Total'
+            };
+
+            const layout = {
+                title: 'Custo Total e Venda Total Mensal',
+                xaxis: { title: 'Mês' },
+                yaxis: { title: 'Valor' }
+            };
+
+            const data = [trace1, trace2];
+            Plotly.newPlot('grafico-linha', data, layout);
+        }
+
+        function criarGraficoBarras() {
+            const trace = {
+                x: dados.meses,
+                y: dados.quantidadeComprado,
+                type: 'bar',
+                name: 'Quantidade Comprado'
+            };
+
+            const trace2 = {
+                x: dados.meses,
+                y: dados.quantidadeVendido,
+                type: 'bar',
+                name: 'Quantidade Vendido'
+            };
+
+            const layout = {
+                title: 'Quantidade Comprado e Vendido Mensal',
+                barmode: 'group',
+                xaxis: { title: 'Mês' },
+                yaxis: { title: 'Quantidade' }
+            };
+
+            const data = [trace, trace2];
+            Plotly.newPlot('grafico-barras', data, layout);
+        }
+
+        function criarGraficoDispersao() {
+            const trace = {
+                x: dados.meses,
+                y: dados.lucroPercentual,
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Percentual de Lucro'
+            };
+
+            const layout = {
+                title: 'Percentual de Lucro Mensal',
+                xaxis: { title: 'Mês' },
+                yaxis: { title: 'Percentual (%)' }
+            };
+
+            const data = [trace];
+            Plotly.newPlot('grafico-dispersao', data, layout);
+        }
+
+        function criarGraficoPizza() {
+            const trace = {
+                labels: dados.produtosMaisVendidos,
+                values: [40, 30, 20], // Valores fictícios para exemplificar
+                type: 'pie'
+            };
+
+            const layout = {
+                title: 'Produtos Mais Vendidos (Quantidade Mensal)'
+            };
+
+            const data = [trace];
+            Plotly.newPlot('grafico-pizza', data, layout);
+        }
+
+        function criarGraficoBarrasLinha() {
+            const trace1 = {
+                x: dados.vendasGrupos.map(item => item.grupo),
+                y: dados.vendasGrupos.map(item => item.vendas),
+                type: 'bar',
+                name: 'Vendas'
+            };
+
+            const trace2 = {
+                x: dados.vendasGrupos.map(item => item.grupo),
+                y: [1000, 1000, 1000, 1000], // Meta fictícia para exemplificar
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Meta de 1000 unidades',
+                line: { dash: 'dash' }
+            };
+
+            const layout = {
+                title: 'Grupos com Vendas >= 1000 Unidades Mensal',
+                xaxis: { title: 'Grupo' },
+                yaxis: { title: 'Quantidade' }
+            };
+
+            const data = [trace1, trace2];
+            Plotly.newPlot('grafico-barras-linha', data, layout);
+        }
+
+        function popularTabelaAnalitica() {
+            const tabela = document.getElementById('tabela-analitica');
+            const tbody = tabela.getElementsByTagName('tbody')[0];
+
+            dados.estoqueBaixo.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${item.produto}</td><td>${item.quantidade}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Chamando as funções para gerar os gráficos e popular a tabela
+        criarGraficoLinha();
+        criarGraficoBarras();
+        criarGraficoDispersao();
+        criarGraficoPizza();
+        criarGraficoBarrasLinha();
+        popularTabelaAnalitica();
+    </script>
 </body>
 </html>
