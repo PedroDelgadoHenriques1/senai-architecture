@@ -24,6 +24,6 @@ Espera-se que o sistema proporcione uma experiência eficiente e agradável para
 
 
 
-REQUISITOS DE INSTALAÇÃO CASO DER ERRO:
+REQUISITOS DE INSTALAÇÃO
 pip install pandas
 pip install plotly
